@@ -16,33 +16,15 @@
  *
  */
 
-package org.apache.skywalking.oap.server.receiver.trace.provider.parser.listener;
+package org.apache.skywalking.oap.server.core.query.type.event;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
-import org.apache.skywalking.oap.server.core.analysis.DispatcherDetectorListener;
-import org.apache.skywalking.oap.server.core.source.Source;
-import org.apache.skywalking.oap.server.core.source.SourceReceiver;
+import lombok.Data;
 
-/**
- * Mock receiver for testing.
- */
-public class MockReceiver implements SourceReceiver {
-    @Getter
-    private List<Source> receivedSources = new ArrayList<>();
+@Data
+public class Events {
+    List<Event> events = new ArrayList<>();
 
-    @Override
-    public void receive(final Source source) {
-        receivedSources.add(source);
-    }
-
-    public void clear() {
-        receivedSources.clear();
-    }
-
-    @Override
-    public DispatcherDetectorListener getDispatcherDetectorListener() {
-        throw new UnsupportedOperationException("No getDispatcherDetectorListener in mock receiver.");
-    }
+    int total;
 }

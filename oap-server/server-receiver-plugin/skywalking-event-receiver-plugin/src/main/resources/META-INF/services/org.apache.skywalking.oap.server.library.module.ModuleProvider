@@ -16,4 +16,4 @@
 #
 #
 
-org.apache.skywalking.oap.server.receiver.trace.provider.EventModuleProvider
+org.apache.skywalking.oap.server.receiver.event.provider.EventModuleProvider

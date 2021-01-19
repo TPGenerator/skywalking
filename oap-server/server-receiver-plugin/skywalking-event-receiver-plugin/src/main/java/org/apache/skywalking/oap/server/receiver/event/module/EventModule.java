@@ -16,23 +16,19 @@
  *
  */
 
-package org.apache.skywalking.oap.server.receiver.trace.dispatcher;
+package org.apache.skywalking.oap.server.receiver.event.module;
 
-import org.apache.skywalking.apm.network.event.v3.Event;
-import org.apache.skywalking.oap.server.core.CoreModule;
-import org.apache.skywalking.oap.server.core.source.SourceReceiver;
-import org.apache.skywalking.oap.server.library.module.ModuleManager;
+import org.apache.skywalking.oap.server.library.module.ModuleDefine;
 
-public class EventSourceDispatcher {
-    private final SourceReceiver sourceReceiver;
+public class EventModule extends ModuleDefine {
+    public static final String NAME = "receiver-event";
 
-    public EventSourceDispatcher(final ModuleManager moduleManager) {
-        sourceReceiver = moduleManager.find(CoreModule.NAME)
-                                      .provider()
-                                      .getService(SourceReceiver.class);
+    public EventModule() {
+        super(NAME);
     }
 
-    public void dispatch(final Event event) {
-
+    @Override
+    public Class[] services() {
+        return new Class[] {};
     }
 }

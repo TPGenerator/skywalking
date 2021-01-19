@@ -16,16 +16,18 @@
  *
  */
 
-package org.apache.skywalking.oap.server.receiver.trace.provider.handler.grpc;
+package org.apache.skywalking.oap.server.receiver.event.provider.handler.grpc;
 
+import com.google.gson.Gson;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.skywalking.apm.network.common.v3.Commands;
 import org.apache.skywalking.apm.network.event.v3.Event;
 import org.apache.skywalking.apm.network.event.v3.EventServiceGrpc;
+import org.apache.skywalking.oap.server.core.analysis.worker.RecordStreamProcessor;
+import org.apache.skywalking.oap.server.core.event.EventRecord;
 import org.apache.skywalking.oap.server.library.module.ModuleManager;
 import org.apache.skywalking.oap.server.library.server.grpc.GRPCHandler;
-import org.apache.skywalking.oap.server.receiver.trace.dispatcher.EventSourceDispatcher;
 import org.apache.skywalking.oap.server.telemetry.TelemetryModule;
 import org.apache.skywalking.oap.server.telemetry.api.CounterMetrics;
 import org.apache.skywalking.oap.server.telemetry.api.HistogramMetrics;
@@ -34,11 +36,11 @@ import org.apache.skywalking.oap.server.telemetry.api.MetricsTag;
 
 @Slf4j
 public class EventServiceHandler extends EventServiceGrpc.EventServiceImplBase implements GRPCHandler {
+    private static final Gson GSON = new Gson();
+
     private final HistogramMetrics histogram;
 
     private final CounterMetrics errorCounter;
-
-    private final EventSourceDispatcher dispatcher;
 
     public EventServiceHandler(ModuleManager moduleManager) {
         final MetricsCreator metricsCreator = moduleManager.find(TelemetryModule.NAME)
@@ -53,8 +55,6 @@ public class EventServiceHandler extends EventServiceGrpc.EventServiceImplBase i
             "event_error_count", "The error number of event analysis",
             new MetricsTag.Keys("protocol"), new MetricsTag.Values("grpc")
         );
-
-        dispatcher = new EventSourceDispatcher(moduleManager);
     }
 
     @Override
@@ -63,7 +63,18 @@ public class EventServiceHandler extends EventServiceGrpc.EventServiceImplBase i
             @Override
             public void onNext(final Event event) {
                 try (HistogramMetrics.Timer ignored = histogram.createTimer()) {
-                    dispatcher.dispatch(event);
+                    final EventRecord record = new EventRecord();
+                    record.setUuid(event.getUuid());
+                    record.setService(event.getSource().getService());
+                    record.setServiceInstance(event.getSource().getServiceInstance());
+                    record.setEndpoint(event.getSource().getEndpoint());
+                    record.setName(event.getName());
+                    record.setType(event.getType().name());
+                    record.setMessage(event.getMessage());
+                    record.setParameters(GSON.toJson(event.getParametersMap()));
+                    record.setStartTime(event.getStartTime());
+                    record.setEndTime(event.getEndTime());
+                    RecordStreamProcessor.getInstance().in(record);
                 } catch (Exception e) {
                     errorCounter.inc();
                     log.error(e.getMessage(), e);

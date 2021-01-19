@@ -23,6 +23,7 @@ import io.grpc.BindableService;
 import io.grpc.ServerInterceptor;
 import io.grpc.ServerServiceDefinition;
 import io.grpc.netty.NettyServerBuilder;
+import io.grpc.protobuf.services.ProtoReflectionService;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Objects;
@@ -114,6 +115,7 @@ public class GRPCServer implements Server {
             sslContext = DynamicSslContext.forServer(privateKeyFile, certChainFile);
             nettyServerBuilder.sslContext(sslContext);
         }
+        nettyServerBuilder.addService(ProtoReflectionService.newInstance());
         log.info("Server started, host {} listening on {}", host, port);
     }
 

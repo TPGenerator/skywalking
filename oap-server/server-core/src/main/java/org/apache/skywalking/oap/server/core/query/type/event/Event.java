@@ -16,19 +16,25 @@
  *
  */
 
-package org.apache.skywalking.oap.server.receiver.trace.module;
+package org.apache.skywalking.oap.server.core.query.type.event;
 
-import org.apache.skywalking.oap.server.library.module.ModuleDefine;
+import lombok.Data;
 
-public class EventModule extends ModuleDefine {
-    public static final String NAME = "receiver-event";
+@Data
+public class Event {
+    String uuid;
 
-    public EventModule() {
-        super(NAME);
-    }
+    Source source;
 
-    @Override
-    public Class[] services() {
-        return new Class[] {};
-    }
+    String name;
+
+    Type type;
+
+    String message;
+
+    String parameters;
+
+    long startTime;
+
+    long endTime;
 }

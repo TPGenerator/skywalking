@@ -39,5 +39,10 @@
             <artifactId>agent-analyzer</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-services</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
     </dependencies>
 </project>

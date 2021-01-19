@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.skywalking.oap.server.receiver.trace.provider;
+package org.apache.skywalking.oap.server.receiver.event.provider;
 
 import org.apache.skywalking.oap.server.analyzer.module.AnalyzerModule;
 import org.apache.skywalking.oap.server.configuration.api.ConfigurationModule;
@@ -27,11 +27,9 @@ import org.apache.skywalking.oap.server.library.module.ModuleConfig;
 import org.apache.skywalking.oap.server.library.module.ModuleDefine;
 import org.apache.skywalking.oap.server.library.module.ModuleProvider;
 import org.apache.skywalking.oap.server.library.module.ServiceNotProvidedException;
+import org.apache.skywalking.oap.server.receiver.event.module.EventModule;
+import org.apache.skywalking.oap.server.receiver.event.provider.handler.grpc.EventServiceHandler;
 import org.apache.skywalking.oap.server.receiver.sharing.server.SharingServerModule;
-import org.apache.skywalking.oap.server.receiver.trace.module.EventModule;
-import org.apache.skywalking.oap.server.receiver.trace.provider.handler.grpc.EventServiceHandler;
-import org.apache.skywalking.oap.server.receiver.trace.provider.handler.rest.TraceSegmentReportListServletHandler;
-import org.apache.skywalking.oap.server.receiver.trace.provider.handler.rest.TraceSegmentReportSingleServletHandler;
 import org.apache.skywalking.oap.server.telemetry.TelemetryModule;
 
 public class EventModuleProvider extends ModuleProvider {
@@ -68,8 +66,9 @@ public class EventModuleProvider extends ModuleProvider {
         EventServiceHandler eventServiceHandler = new EventServiceHandler(getManager());
         grpcHandlerRegister.addHandler(eventServiceHandler);
 
-        jettyHandlerRegister.addHandler(new TraceSegmentReportListServletHandler(getManager()));
-        jettyHandlerRegister.addHandler(new TraceSegmentReportSingleServletHandler(getManager()));
+        // TODO
+        // jettyHandlerRegister.addHandler(new TraceSegmentReportListServletHandler(getManager()));
+        // jettyHandlerRegister.addHandler(new TraceSegmentReportSingleServletHandler(getManager()));
     }
 
     @Override

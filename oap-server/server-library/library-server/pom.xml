@@ -59,5 +59,11 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-services</artifactId>
+            <version>1.32.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>
